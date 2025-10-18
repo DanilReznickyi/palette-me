@@ -5,22 +5,69 @@
   --foreground: #171717;
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* плавный скролл */
+html { scroll-behavior: smooth; }
+
+/* если есть поддержка 100svh (iOS/Android), используем в будущем для секций */
+@supports (height: 100svh) {
+  .min-h-screen-svh { min-height: 100svh; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Мобильный LANDSCAPE с маленькой высотой: делаем hero в 1 колонку,
+   уменьшаем заголовок, слайдер не наклоняем и не «выпирает».
+   Порог по высоте можно подвинуть (480px → 520px и т.п.)
+────────────────────────────────────────────────────────────── */
+@media (orientation: landscape) and (max-height: 480px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    min-height: auto !important;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .hero-title {
+    font-size: clamp(28px, 6vw, 44px) !important;
+    line-height: 1.12 !important;
+  }
+  .hero-slider {
+    max-width: 86vw !important;
+    transform: none !important;       /* на всякий случай, если где-то остался rotate */
+    box-shadow: 0 12px 40px rgba(0,0,0,.18);
+  }
+  /* сам слайдер: делаем чуть более плоским (2:1), чтобы влезал по высоте */
+  .hero-slider [style*="aspect-ratio"] {
+    aspect-ratio: 2 / 1 !important;
+  }
+  /* картинка в Steps — меньше поворот: не упирается в края */
+  .step-figure {
+    transform: none !important;
+  }
+  /* шапка всегда на белом фоне для контраста пиктограмм */
+  header.sticky {
+    background: rgba(255,255,255,0.82) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    backdrop-filter: saturate(180%) blur(12px);
+    box-shadow: 0 1px 0 rgba(0,0,0,.06);
+  }
+}
+

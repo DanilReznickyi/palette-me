@@ -31,8 +31,24 @@ jobs:
         run: |
           if [ -d "./app/api" ]; then mv ./app/api ./app/__api_disabled; fi
           if [ -d "./pbn-service" ]; then mv ./pbn-service ./__pbn_disabled; fi
-          if [ -d "./app/shop/[slug]" ]; then mkdir -p ./app/__disabled_shop && mv "./app/shop/[slug]" "./app/__disabled_shop/slug"; fi
-          if [ -d "./app/checkout" ]; then mv ./app/checkout ./app/__disabled_checkout; fi
+          DISABLE_PATHS=(
+            "./app/shop/[slug]"
+            "./app/checkout"
+            "./app/cart"
+            "./app/upload"
+            "./app/verify"
+            "./app/register"
+            "./app/reviews"
+            "./app/auth"
+          )
+          for P in "${DISABLE_PATHS[@]}"; do
+            if [ -d "$P" ]; then
+              DEST_DIR="$(dirname "$P")/__disabled_$(basename "$P" | tr -d '[]')"
+              mkdir -p "$DEST_DIR"
+              mv "$P" "$DEST_DIR"
+            fi
+          done
+
       - name: Install dependencies
         run: npm ci
 

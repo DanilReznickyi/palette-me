@@ -2,13 +2,15 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
-	"scripts": {
-		"dev": "next dev",
-		"build": "next build --no-lint",
-		"start": "next start",
-		"lint": "eslint ."
-	}
-	,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --no-lint",
+    "start": "next start",
+    "lint": "eslint .",
+		"postinstall": "prisma generate"
+  },
+
+
   "dependencies": {
     "@prisma/client": "^6.17.1",
     "autoprefixer": "^10.4.21",

@@ -1,12 +1,14 @@
 // next.config.ts
-const isProd = process.env.NODE_ENV === "production";
+const isPages = process.env.NEXT_STATIC_EXPORT === "1";
 
 export default {
-  output: "export",
-  images: { unoptimized: true },
-  basePath: isProd ? "/palette-me" : "",
-  assetPrefix: isProd ? "/palette-me/" : "",
-  trailingSlash: true,
+
+  output: isPages ? "export" : undefined,
+
+  images: { unoptimized: isPages },
+  basePath: isPages ? "/palette-me" : "",
+  assetPrefix: isPages ? "/palette-me/" : "",
+  trailingSlash: isPages,
 
 
   eslint: { ignoreDuringBuilds: true },

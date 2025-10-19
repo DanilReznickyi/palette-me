@@ -1,8 +1,8 @@
-name: Deploy Next.js static export to GitHub Pages
+name: Deploy Next.js to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -18,39 +18,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: '20'
+          cache: 'npm'
 
-      # Отключаем серверные и динамические страницы только на CI
-      - name: Disable server-only & dynamic pages for static export
-        shell: bash
+
+      - name: Disable server & dynamic routes for static export
         run: |
-          if [ -d "./app/api" ]; then mv ./app/api ./app/__api_disabled; fi
-          if [ -d "./pbn-service" ]; then mv ./pbn-service ./__pbn_disabled; fi
-          if [ -d "./app/shop/[slug]" ]; then mkdir -p ./app/__disabled_shop; mv "./app/shop/[slug]" "./app/__disabled_shop/slug"; fi
-          if [ -d "./app/checkout" ]; then mv ./app/checkout ./app/__disabled_checkout; fi
-          if [ -d "./app/cart" ]; then mv ./app/cart ./app/__disabled_cart; fi
-          if [ -d "./app/upload" ]; then mv ./app/upload ./app/__disabled_upload; fi
-          if [ -d "./app/verify" ]; then mv ./app/verify ./app/__disabled_verify; fi
-          if [ -d "./app/register" ]; then mv ./app/register ./app/__disabled_register; fi
-          if [ -d "./app/reviews" ]; then mv ./app/reviews ./app/__disabled_reviews; fi
-          if [ -d "./app/auth" ]; then mv ./app/auth ./app/__disabled_auth; fi
+          if [ -d ./app/api ]; then mv ./app/api ./app/__api_disabled; fi
+          if [ -d ./pbn-service ]; then mv ./pbn-service ./__pbn_disabled; fi
+          if [ -d "./app/shop/[slug]" ]; then mkdir -p ./app/__disabled_shop; mv "./app/shop/[slug]" ./app/__disabled_shop/slug; fi
+          for p in ./app/checkout ./app/cart ./app/upload ./app/verify ./app/register ./app/reviews ./app/auth; do
+            if [ -d "$p" ]; then mv "$p" "$(dirname "$p")/__disabled_$(basename "$p")"; fi
+          done
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (output: export already writes to ./out)
+      - name: Build (output: export writes to ./out)
         env:
           NEXT_STATIC_EXPORT: "1"
         run: npm run build
 
-      - name: Upload artifact (./out)
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
@@ -62,6 +55,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4

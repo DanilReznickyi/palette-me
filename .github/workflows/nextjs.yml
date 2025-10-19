@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -24,40 +24,31 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: 20
+          cache: npm
 
+      # Отключаем серверные и динамические страницы только на CI
       - name: Disable server-only & dynamic pages for static export
+        shell: bash
         run: |
           if [ -d "./app/api" ]; then mv ./app/api ./app/__api_disabled; fi
           if [ -d "./pbn-service" ]; then mv ./pbn-service ./__pbn_disabled; fi
-          DISABLE_PATHS=(
-            "./app/shop/[slug]"
-            "./app/checkout"
-            "./app/cart"
-            "./app/upload"
-            "./app/verify"
-            "./app/register"
-            "./app/reviews"
-            "./app/auth"
-          )
-          for P in "${DISABLE_PATHS[@]}"; do
-            if [ -d "$P" ]; then
-              DEST_DIR="$(dirname "$P")/__disabled_$(basename "$P" | tr -d '[]')"
-              mkdir -p "$DEST_DIR"
-              mv "$P" "$DEST_DIR"
-            fi
-          done
+          if [ -d "./app/shop/[slug]" ]; then mkdir -p ./app/__disabled_shop; mv "./app/shop/[slug]" "./app/__disabled_shop/slug"; fi
+          if [ -d "./app/checkout" ]; then mv ./app/checkout ./app/__disabled_checkout; fi
+          if [ -d "./app/cart" ]; then mv ./app/cart ./app/__disabled_cart; fi
+          if [ -d "./app/upload" ]; then mv ./app/upload ./app/__disabled_upload; fi
+          if [ -d "./app/verify" ]; then mv ./app/verify ./app/__disabled_verify; fi
+          if [ -d "./app/register" ]; then mv ./app/register ./app/__disabled_register; fi
+          if [ -d "./app/reviews" ]; then mv ./app/reviews ./app/__disabled_reviews; fi
+          if [ -d "./app/auth" ]; then mv ./app/auth ./app/__disabled_auth; fi
 
       - name: Install dependencies
         run: npm ci
 
-- name: Build (output: export already writes to ./out)
-  env:
-    NEXT_STATIC_EXPORT: "1"
-  run: |
-    npm run build
-
+      - name: Build (output: export already writes to ./out)
+        env:
+          NEXT_STATIC_EXPORT: "1"
+        run: npm run build
 
       - name: Upload artifact (./out)
         uses: actions/upload-pages-artifact@v3

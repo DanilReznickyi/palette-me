@@ -12,13 +12,9 @@ import { makePlaceholder } from "@/components/shop/mockData";
 export default function CartPage() {
   const { items, setQty, remove, clear } = useCart();
 
-  const total = useMemo(
-    () => items.reduce((s, i) => s + i.price * i.qty, 0),
-    [items]
-  );
+  const total = useMemo(() => items.reduce((s, i) => s + i.price * i.qty, 0), [items]);
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-
   const [shipping, setShipping] = useState<ShippingData | null>(null);
   const [payment, setPayment] = useState<PaymentData | null>(null);
 
@@ -62,18 +58,10 @@ export default function CartPage() {
                     const thumb = (i as any)?.meta?.preview || makePlaceholder(i.title, i.price + 7);
                     return (
                       <div key={i.id} className="flex items-center gap-3 border rounded-xl p-3 bg-white">
-                        {/* миниатюра */}
                         <div className="w-18 h-18 shrink-0 rounded-lg overflow-hidden border">
-                          <img
-                            src={thumb}
-                            alt={i.title}
-                            className="w-18 h-18 object-cover block"
-                            width={72}
-                            height={72}
-                          />
+                          <img src={thumb} alt={i.title} className="w-18 h-18 object-cover block" width={72} height={72} />
                         </div>
 
-                        {/* инфо */}
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold truncate" title={i.title}>
                             {i.title}
@@ -112,10 +100,7 @@ export default function CartPage() {
                             +
                           </button>
                         </div>
-                        <button
-                          onClick={() => remove(i.id)}
-                          className="text-red-600 text-sm hover:underline cursor-pointer"
-                        >
+                        <button onClick={() => remove(i.id)} className="text-red-600 text-sm hover:underline cursor-pointer">
                           Remove
                         </button>
                       </div>
@@ -127,10 +112,7 @@ export default function CartPage() {
                   <span>€{total.toFixed(2)}</span>
                 </div>
                 <div className="mt-6 flex items-center justify-between">
-                  <button
-                    onClick={clear}
-                    className="px-6 py-3 rounded-lg border font-semibold hover:bg-slate-50 cursor-pointer"
-                  >
+                  <button onClick={clear} className="px-6 py-3 rounded-lg border font-semibold hover:bg-slate-50 cursor-pointer">
                     Clear cart
                   </button>
 
@@ -145,6 +127,7 @@ export default function CartPage() {
             )}
           </>
         )}
+
         {step === 2 && (
           <ShippingForm
             initial={shipping ?? undefined}
@@ -155,6 +138,7 @@ export default function CartPage() {
             onBack={goBack}
           />
         )}
+
         {step === 3 && shipping && (
           <PaymentForm
             total={total}
@@ -166,6 +150,7 @@ export default function CartPage() {
             onBack={goBack}
           />
         )}
+
         {step === 4 && shipping && payment && (
           <OrderDone
             total={total}

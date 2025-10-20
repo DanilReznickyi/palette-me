@@ -1,14 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function CheckoutRedirect() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutInner />
+    </Suspense>
+  );
+}
+
+function CheckoutInner() {
   const router = useRouter();
   const sp = useSearchParams();
+
   useEffect(() => {
-    const step = sp.get("step");
-    router.replace("/cart" + (step ? "" : ""));
+    router.replace("/cart");
   }, [router, sp]);
 
   return (

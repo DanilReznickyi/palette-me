@@ -1,5 +1,5 @@
 // next.config.ts
-const isPages = process.env.NEXT_STATIC_EXPORT === "1";
+const isPages = process.env.NEXT_STATIC_EXPORT === "0";
 
 export default {
 

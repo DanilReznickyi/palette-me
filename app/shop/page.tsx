@@ -1,4 +1,3 @@
-
 import ShopClient from "@/components/shop/ShopClient";
 
 export const metadata = {

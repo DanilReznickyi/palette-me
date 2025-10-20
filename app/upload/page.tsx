@@ -55,10 +55,9 @@ export default function UploadPage() {
   const [paper, setPaper] = useState<"A4" | "A3" | "A2">("A4");
   const [contour, setContour] = useState(2);
   const [withNumbers, setWithNumbers] = useState(true);
-
   const [submitting, setSubmitting] = useState(false);
 
-	const { add, openCart, items } = useCart();
+  const { add, openCart, items } = useCart();
 
   const price = useMemo(() => {
     const base = 6;
@@ -140,17 +139,17 @@ export default function UploadPage() {
   const addToCart = () => {
     if (!file) return;
     const wasEmpty = items.length === 0;
-		add(
-			{
-				id: `custom-${Date.now()}`,
-				title: `Custom canvas (${paper}, ${colors} colors)`,
-				price: Number(price),
-				slug: undefined,
-				meta: { colors, detail, paper, contour, withNumbers, preview: resultUrl ?? previewUrl },
-			},
-			1
-		);
-		if (wasEmpty) openCart();
+    add(
+      {
+        id: `custom-${Date.now()}`,
+        title: `Custom canvas (${paper}, ${colors} colors)`,
+        price: Number(price),
+        slug: undefined,
+        meta: { colors, detail, paper, contour, withNumbers, preview: resultUrl ?? previewUrl },
+      },
+      1
+    );
+    if (wasEmpty) openCart();
   };
   const onClearResult = () => {
     setResultUrl(null);
@@ -216,9 +215,9 @@ export default function UploadPage() {
 
       <ResultModal
         open={modalOpen && !!resultUrl}
-        imageUrl={resultUrl ?? ""}            
+        imageUrl={resultUrl ?? ""}
         palette={palette}
-        meta={{ paper, colors, detail, contour, withNumbers }} 
+        meta={{ paper, colors, detail, contour, withNumbers }}
         onAddToCart={onAddToCartFromModal}
         onClear={onClearResult}
         onClose={() => setModalOpen(false)}

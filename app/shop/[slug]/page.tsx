@@ -4,12 +4,9 @@ import { PRODUCTS, makePlaceholder } from "@/components/shop/mockData";
 import { useCart } from "@/lib/cartStore";
 import Link from "next/link";
 
-
-
-
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = PRODUCTS.find((p) => p.slug === params.slug);
-	const { add, open, items } = useCart();
+  const { add, open, items } = useCart();
 
   if (!product) {
     return (
@@ -44,16 +41,16 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <div className="mt-6 text-3xl font-extrabold text-indigo-600">€{product.price}</div>
 
           <div className="mt-6 flex gap-3">
-					<button
-  onClick={() => {
-    const wasEmpty = items.length === 0;
-    add({ id: product.id, title: product.title, price: product.price, slug: product.slug });
-    if (wasEmpty) open();
-  }}
-  className="rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold shadow hover:bg-indigo-500 transition"
->
-  Add to cart
-</button>
+            <button
+              onClick={() => {
+                const wasEmpty = items.length === 0;
+                add({ id: product.id, title: product.title, price: product.price, slug: product.slug });
+                if (wasEmpty) open();
+              }}
+              className="rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold shadow hover:bg-indigo-500 transition"
+            >
+              Add to cart
+            </button>
             <a
               href="#reviews"
               className="rounded-xl border border-slate-300 px-5 py-3 font-semibold hover:bg-slate-50 transition"
@@ -63,6 +60,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
+
       <section id="reviews" className="mt-12 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-bold">Reviews</h2>
         <div className="mt-4 space-y-4">
@@ -71,18 +69,14 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               <span className="font-semibold">Alice</span>
               <span className="text-amber-600 text-sm">★ ★ ★ ★ ☆</span>
             </div>
-            <p className="mt-2 text-slate-600">
-              Great starter kit. Clear numbering and satisfying color blocks.
-            </p>
+            <p className="mt-2 text-slate-600">Great starter kit. Clear numbering and satisfying color blocks.</p>
           </article>
           <article className="rounded-xl border border-slate-200 p-4">
             <div className="flex items-center justify-between">
               <span className="font-semibold">Mark</span>
               <span className="text-amber-600 text-sm">★ ★ ★ ★ ★</span>
             </div>
-            <p className="mt-2 text-slate-600">
-              Loved the palette! I finished it over the weekend.
-            </p>
+            <p className="mt-2 text-slate-600">Loved the palette! I finished it over the weekend.</p>
           </article>
         </div>
       </section>

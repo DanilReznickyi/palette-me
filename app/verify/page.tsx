@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function VerifyPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyInner />
+    </Suspense>
+  );
+}
+
+function VerifyInner() {
   const q = useSearchParams();
   const email = q.get("email") || "";
   const [code, setCode] = useState("");
@@ -26,7 +34,6 @@ export default function VerifyPage() {
     setLoading(false);
 
     if (res.ok) {
-
       alert("Email verified. Please sign in.");
       router.replace("/signin");
     } else {
